@@ -6,7 +6,7 @@ import { HomePage } from './customer/pages/HomePage/HomePage';
 
 function App() {
   return (
-    <><div className="">
+    <><div>
       <Navigation />
     </div>
     <div>
