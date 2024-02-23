@@ -6,8 +6,8 @@ import { Button } from "@mui/material";
 const HomeSectionCarousel = ({data, sectionName}) => {
   const responsive = {
     0: { items: 1 },
-    720: { items: 3 },
-    1024: { items: 5.5 },
+    720: { items: 4 },
+    1024: { items: 6.5 },
   };
 
   const renderNextButton = ({ isDisabled }) => {
