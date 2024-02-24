@@ -10,7 +10,8 @@ function App() {
       <Navigation />
     </div>
     <div>
-      <HomePage />
+      {/* <HomePage /> */}
+      
     </div>
     <div>
       <Footer />
