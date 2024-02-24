@@ -1,7 +1,7 @@
 import React from 'react'
 import ProductCard from './ProductCard'
 
-const Products = () => {
+const Product = () => {
   return (
     <div>
         <ProductCard />
@@ -9,4 +9,4 @@ const Products = () => {
   )
 }
 
-export default Products
+export default Product
