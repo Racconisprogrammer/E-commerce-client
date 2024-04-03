@@ -1,34 +1,87 @@
-import { GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./ActionType"
+import {
+  ADD_ITEM_TO_CART_FAILURE,
+  ADD_ITEM_TO_CART_REQUEST,
+  ADD_ITEM_TO_CART_SUCCESS,
+  GET_CART_FAILURE,
+  GET_CART_REQUEST,
+  GET_CART_SUCCESS,
+  REMOVE_CART_ITEM_FAILURE,
+  REMOVE_CART_ITEM_REQUEST,
+  REMOVE_CART_ITEM_SUCCESS,
+  UPDATE_CART_ITEM_FAILURE,
+  UPDATE_CART_ITEM_REQUEST,
+  UPDATE_CART_ITEM_SUCCESS,
+} from "./ActionType";
 
 const initialState = {
-    user:null,
-    isLoading:null,
-    error:null,
-    jwt:null
-}
+  cart: null,
+  loading: false,
+  error: null,
+  cartItems: [],
+};
 
+export const cartReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case ADD_ITEM_TO_CART_REQUEST:
+      return { ...state, loading: true, error: null };
+    case ADD_ITEM_TO_CART_SUCCESS:
+      return {
+        ...state,
+        cartItems: [...state.cartItems, action.payload.cartItems],
+        loading: false,
+      };
+    case ADD_ITEM_TO_CART_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case GET_CART_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case GET_CART_SUCCESS:
+      return {
+        ...state,
+        cartItems: action.payload.cartItems,
+        cart: action.payload,
+        loading: false,
+      };
+    case GET_CART_FAILURE:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case REMOVE_CART_ITEM_REQUEST:
+    case UPDATE_CART_ITEM_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case REMOVE_CART_ITEM_SUCCESS:
+      return {
+        ...state,
+        deleteCartItem: action.payload,
+        loading: false,
+      };
 
-export const authReducer = (state=initialState, action) => {
-
-    switch(action.type){
-        case REGISTER_REQUEST:
-        case LOGIN_REQUEST:
-        case GET_USER_REQUEST:
-            return {...state, isLoading:true, error:null}
-        case REGISTER_SUCCESS:
-        case LOGIN_SUCCESS:
-            return {...state, isLoading:false, error:null, jwt:action.payload}
-        case GET_USER_SUCCESS:
-            return {...state, isLoading:false, error:null, user:action.payload}
-        case REGISTER_FAILURE:
-        case LOGIN_FAILURE:
-        case GET_USER_FAILURE:
-            return {...state, isLoading:false, error:action.payload}
-        case LOGOUT:
-            return {...initialState}
-
-        default:
-            return state;
-
-    }
-}
+    case UPDATE_CART_ITEM_SUCCESS:
+      return {
+        ...state,
+        updateCartItem: action.payload,
+        loading: false,
+      };
+    case REMOVE_CART_ITEM_FAILURE:
+    case UPDATE_CART_ITEM_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+    default:
+      return state;
+  }
+};
