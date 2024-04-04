@@ -18,14 +18,16 @@ const PaymentSuccess = () => {
     useEffect(()=> {
         const urlParam = new URLSearchParams(window.location.search);
 
-        setPaymentId(urlParam.get("razorpay_payment_link_id"))
+        setPaymentId(urlParam.get("razorpay_payment_id"))
         setPaymentStatus(urlParam.get("razorpay_payment_link_status"))
     }, [])
 
     useEffect(()=> {
+        if (paymentId) {
         const data = {orderId, paymentId};
         dispatch(getOrderById(orderId));
         dispatch(updatePayment(data))
+    }
 
     }, [orderId, paymentId])
 
@@ -51,7 +53,7 @@ const PaymentSuccess = () => {
             >
                 <Grid item xs={6}>
                     <div className='flex items-center'>
-                        <img className='w-[5rem] h-[5rem] object-cover object-top' src="" alt="" />
+                        <img className='w-[5rem] h-[5rem] object-cover object-top' src="{item.product.imageUrl}" alt="" />
                         <div className='ml-5 space-y-2'>
                             <p>{item.product.title}</p>
                             <div className='opacity-50 text-xs font-semibold space-x-5'>

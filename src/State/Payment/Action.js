@@ -24,7 +24,7 @@ export const updatePayment = (reqData) => async (dispatch) => {
   dispatch({ type: UPDATE_PAYMENT_REQUEST });
 
   try {
-    const { data } = await api.get(`/api/payments?payment_id=${reqData.orderId}&order_id=${reqData.orderId}`);
+    const { data } = await api.get(`/api/payments?payment_id=${reqData.paymentId}&order_id=${reqData.orderId}`);
     
     if (data.payment_link_url) {
       window.location.href = data.payment_link_url;
