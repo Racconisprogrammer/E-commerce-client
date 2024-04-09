@@ -31,9 +31,12 @@ export default function Navigation() {
   const jwt = localStorage.getItem("jwt");
   const dispatch = useDispatch();
   const {auth} = useSelector(store=>store)
+  const {cart} = useSelector(store=>store)
   const location = useLocation();
 
-
+ const handleCartClick = () => {
+   navigate("/cart")
+  };
   const handleUserClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -52,9 +55,6 @@ export default function Navigation() {
     navigate(`/${category.id}/${section.id}/${item.id}`);
     close();
   };
-
-
-
 
   useEffect(()=> {
       if(jwt) {
@@ -468,13 +468,13 @@ export default function Navigation() {
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
-                  <Button className="group -m-2 flex items-center p-2">
+                  <Button className="group -m-2 flex items-center p-2" onClick={()=>handleCartClick()}>
                     <ShoppingBagIcon
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
+                      {cart?.cartItems?.length}
                     <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      2
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </Button>

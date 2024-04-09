@@ -61,7 +61,7 @@ export const getUser = (jwt) => async (dispatch) => {
     dispatch(getUserRequest())
 
     try {
-        const response = await axios.post(`${API_BASE_URL}/auth/users/profile`, {
+        const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
             headers:{
                 "Authorization":`Bearer ${jwt}`
             }

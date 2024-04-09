@@ -8,7 +8,6 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
-import { mens_kurta } from "../../../Data/Men/men_kurta";
 import ProductCard from "./ProductCard";
 import {findProducts} from "../../../State/Product/Action";
 import { filters, singleFilter } from "./FilterData";
@@ -49,7 +48,7 @@ export default function Product() {
   const priceValue = searchParamms.get("price"); 
   const disccount = searchParamms.get("disccount"); 
   const sortValue = searchParamms.get("sort"); 
-  const pageNumber = searchParamms.get("page"); 
+  const pageNumber = searchParamms.get("page") || 1; 
   const stock = searchParamms.get("stock");
   
   
@@ -91,24 +90,25 @@ export default function Product() {
 
   useEffect(()=>{
 
-    const [minPrice, maxPrice] = priceValue === null ? [0,0] : priceValue.split("-").map(Number);
+    const [minPrice, maxPrice] = priceValue === null ? [0,10000] : priceValue.split("-").map(Number);
 
     const data = {
-      category: param.levelThree,
+      category: param.lavelThree,
       colors: colorValue || [],
       sizes: sizeValue || [],
       minPrice,
       maxPrice,
       minDiscount:disccount || 0,
       sort:sortValue || "price_low",
-      pageNumber:pageNumber -1,
+      pageNumber:pageNumber - 1,
       pageSize: 10,
       stock:stock
     }
 
     dispatch(findProducts(data))
 
-  }, [param.levelThree,
+
+  }, [param.lavelThree,
       colorValue,
       sizeValue,
       priceValue,
@@ -417,9 +417,9 @@ export default function Product() {
                                   defaultValue="female"
                                   name="radio-buttons-group"
                                 >
-                                  {section.options.map((option, optionIdx) => (
+                                  {section.options.map((option) => (
                                     <>
-                                      <FormControlLabel
+                                      <FormControlLabel key={option.id}
                                         onChange={(e) =>
                                           handleRadioFilterChange(e, section.id)
                                         }
@@ -442,8 +442,8 @@ export default function Product() {
               {/* Product grid */}
               <div className="lg:col-span-4 w-full">
                 <div className="flex flex-wrap justify-center bg-white py-5">
-                  {products.products && products.products?.content?.map((item) => (
-                    <ProductCard product={item} />
+                  {products.products && products.products?.content?.map((item, index) => (
+                    <ProductCard product={item} key={index} />
                   ))}
                 </div>
               </div>
@@ -452,7 +452,6 @@ export default function Product() {
           <section className="w-full px=[3.6rem]">
             <div className="px-4 py-5 flex justify-center">
             <Pagination count={products.products?.totalPages} color="secondary" onChange={handlePaginationChange} />
-
             </div>
           </section>
         </main>

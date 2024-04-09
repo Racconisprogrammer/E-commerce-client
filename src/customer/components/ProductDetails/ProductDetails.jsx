@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
-import { Box, Button, Grid, LinearProgress, Rating } from "@mui/material";
+import { Box, Button, Grid, LinearProgress, Rating} from "@mui/material";
 import ProductReviewCard from "./ProductReviewCard";
 import { mens_kurta } from "../../../Data/Men/men_kurta";
 import HomeSectionCard from "../HomeSectionCard/HomeSectionCard";
@@ -9,73 +9,55 @@ import { useDispatch, useSelector } from "react-redux";
 import { findProductsById } from "../../../State/Product/Action";
 import { addItemToCart } from "../../../State/Cart/Action";
 
-const product = {
-  name: "Basic Tee 6-Pack",
-  price: "$192",
-  href: "#",
-  breadcrumbs: [
-    { id: 1, name: "Men", href: "#" },
-    { id: 2, name: "Clothing", href: "#" },
-  ],
-  images: [
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
-      alt: "Two each of gray, white, and black shirts laying flat.",
-    },
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
-      alt: "Model wearing plain black basic tee.",
-    },
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
-      alt: "Model wearing plain gray basic tee.",
-    },
-    {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
-      alt: "Model wearing plain white basic tee.",
-    },
-  ],
-  colors: [
-    { name: "White", class: "bg-white", selectedClass: "ring-gray-400" },
-    { name: "Gray", class: "bg-gray-200", selectedClass: "ring-gray-400" },
-    { name: "Black", class: "bg-gray-900", selectedClass: "ring-gray-900" },
-  ],
-  sizes: [
-    { name: "S", inStock: true },
-    { name: "M", inStock: true },
-    { name: "L", inStock: true },
-    { name: "XL", inStock: true },
-  ],
-  description:
-    'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
-  highlights: [
-    "Hand cut and sewn locally",
-    "Dyed with our proprietary colors",
-    "Pre-washed & pre-shrunk",
-    "Ultra-soft 100% cotton",
-  ],
-  details:
-    'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
-};
-// const reviews = { href: "#", average: 4, totalCount: 117 };
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
 export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState();
-  const [selectedSize, setSelectedSize] = useState();
   const navigate = useNavigate();
   const params = useParams();
   const dispatch = useDispatch();
   const {products} = useSelector(store=>store)
+  let totalRating = 0;
+  let totalReviews = 0;
+  let countRating = 0;
+  let averageRating = 0;
+  let resultFloat = 1;
+  const ratings = products.products?.ratings;
+  const reviews = products.products?.reviews;
+
+  const [selectedSize, setSelectedSize] = useState();
+  
+  if (ratings && Array.isArray(ratings) && ratings.length > 0) {
+    ratings.forEach((item) => {
+      totalRating += item.rating;
+
+      countRating += 1;
+    });
+
+
+    reviews.forEach((item)=>{
+      totalReviews += 1;
+    });
+
+
+    averageRating = totalRating / ratings.length;
+    if (parseFloat('0.' + String(averageRating).split('.')[1]) === 0.5) {
+      resultFloat = parseFloat('0.' + String(averageRating).split('.')[1]);
+    }
+  }
+  
 
   const handleAddToCart = ()=>{
     const data = {productId:params.productId, size:selectedSize.name}
-    dispatch(addItemToCart(data))
-      navigate("/cart")
+      dispatch(addItemToCart(data))
+      console.log("Product ")
+        navigate("/cart")
   }
+  
 
   useEffect(()=> {
     const data = {productId:params.productId}
@@ -90,7 +72,7 @@ export default function ProductDetails() {
             role="list"
             className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
           >
-            {product.breadcrumbs.map((breadcrumb) => (
+            {products.products?.breadcrumbs && products.products?.breadcrumbs.map((breadcrumb) => (
               <li key={breadcrumb.id}>
                 <div className="flex items-center">
                   <a
@@ -114,11 +96,11 @@ export default function ProductDetails() {
             ))}
             <li className="text-sm">
               <a
-                href={product.href}
+                href={products.href}
                 aria-current="page"
                 className="font-medium text-gray-500 hover:text-gray-600"
               >
-                {product.name}
+                {products.name}
               </a>
             </li>
           </ol>
@@ -129,17 +111,17 @@ export default function ProductDetails() {
           <div className="flex flex-col items-center">
             <div className="overflow-hidden rounded-lg max-w-[30rem] max-h-[35rem]">
               <img
-                src={products.product?.imageUrl}
-                alt={product.images[0].alt}
+                src={products.products?.imageUrl}
+                alt=''
                 className="h-full w-full object-cover object-center"
               />
             </div>
             <div className="flex flex-wrap space-x-5 justify-center">
-              {product.images.map((item) => (
+            {products.products?.images && products.products?.images?.map((item) => (
                 <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg max-w-[5rem] max-h-[5rem] mt-4">
                   <img
-                    src={item.src}
-                    alt={item.alt}
+                    src={item.url}
+                    alt={item.name}
                     className="h-full w-full object-cover object-center"
                   />
                 </div>
@@ -151,10 +133,10 @@ export default function ProductDetails() {
           <div className="lg:col-span-1 maxt-auto max-w-2xl px-4 pb-16 sm:px-6 lg:max-w-7xl lg:px-8 lg:pb-24">
             <div className="lg:col-span-2">
               <h1 className="text-lg lg:text-xl font-semibold text-gray-900">
-              {products.product?.brand}
+              {products.products?.brand}
               </h1>
               <h1 className="text-lg lg:text-xl text-gray-900 opacity-60 pt-1">
-              {products.product?.title}
+              {products.products?.title}
               </h1>
             </div>
 
@@ -162,19 +144,26 @@ export default function ProductDetails() {
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <div className="flex space-x-5 items-center text-lg lg:text-xl text-gray-900 mt-6">
-                <p className="font-semibold">{products.product?.discountedPrice}</p>
-                <p className="opacity-50 line-through">{products.product?.price}</p>
-                <p className="text-green-600 font-semibold">{products.product?.discounPersent}</p>
+                {products.products?.discountPrice !== null ?  
+                <p className="font-semibold">{products.products?.discountPrice}</p> 
+                :
+               <p className="opacity-50 line-through">{products.products?.price}</p>
+                }
+                {products.products?.discountPrice !== null ?  
+                <p className="opacity-50 line-through">{products.products?.price}</p> :
+
+                <p className="opacity-50 line-through">{products.products?.discountPrice} </p> 
+                }
+                <p className="text-green-600 font-semibold">{products.products?.discountPercent}% Off </p>
               </div>
 
               {/* Reviews */}
               <div className="mt-6">
                 <div className="flex items-center space-x-3">
-                    <Rating name="read-only" value={3.5} readOnly />
-                    <p className="opacity-50 text-sm">56540 Ratings</p>
-                    <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">3870 Reviews</p>
+                    <Rating name="read-only" value={averageRating} precision={resultFloat} readOnly />
+                    <p className="opacity-50 text-sm">{countRating} Ratings</p>
+                    <p className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">{totalReviews} Reviews</p>
                 </div>
-
               </div>
 
               <form className="mt-10">
@@ -182,7 +171,7 @@ export default function ProductDetails() {
 
 
                 {/* Sizes */}
-                <div className="mt-10">
+                <div className="mt-10 mb-10">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-medium text-gray-900">Size</h3>
                     
@@ -196,17 +185,16 @@ export default function ProductDetails() {
                     <RadioGroup.Label className="sr-only">
                       Choose a size
                     </RadioGroup.Label>
-                    <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
-                      {product.sizes.map((size) => (
+                    <div className="grid grid-cols-4 gap-2 sm:grid-cols-8 lg:grid-cols-8">
+                    {products.products.sizes && products.products.sizes.map((size) => (
                         <RadioGroup.Option
                           key={size.name}
                           value={size}
-                          disabled={!size.inStock}
+                          disabled={!size}
                           className={({ active }) =>
                             classNames(
                               size.inStock
-                                ? "cursor-pointer bg-white text-gray-900 shadow-sm"
-                                : "cursor-not-allowed bg-gray-50 text-gray-200",
+                                ? "cursor-not-allowed bg-gray-50 text-gray-200" :  "cursor-pointer bg-white text-gray-900 shadow-sm",
                               active ? "ring-2 ring-indigo-500" : "",
                               "group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1 sm:py-6"
                             )
@@ -217,7 +205,7 @@ export default function ProductDetails() {
                               <RadioGroup.Label as="span">
                                 {size.name}
                               </RadioGroup.Label>
-                              {size.inStock ? (
+                              {!size.inStock ? (
                                 <span
                                   className={classNames(
                                     active ? "border" : "border-2",
@@ -270,7 +258,7 @@ export default function ProductDetails() {
 
                 <div className="space-y-6">
                   <p className="text-base text-gray-900">
-                    {product.description}
+                    {products.products?.description}
                   </p>
                 </div>
               </div>
@@ -282,9 +270,9 @@ export default function ProductDetails() {
 
                 <div className="mt-4">
                   <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                    {product.highlights.map((highlight) => (
-                      <li key={highlight} className="text-gray-400">
-                        <span className="text-gray-600">{highlight}</span>
+                    {products.products?.highlights && products.products?.highlights.map((highlight) => (
+                      <li key={highlight.name} className="text-gray-400">
+                        <span className="text-gray-600">{highlight.name}</span>
                       </li>
                     ))}
                   </ul>
@@ -295,7 +283,7 @@ export default function ProductDetails() {
                 <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
                 <div className="mt-4 space-y-6">
-                  <p className="text-sm text-gray-600">{product.details}</p>
+                  <p className="text-sm text-gray-600">{products.products?.details}</p>
                 </div>
               </div>
             </div>
@@ -310,7 +298,7 @@ export default function ProductDetails() {
                 <Grid container spacing={7}>
                     <Grid item xs={7}>
                         <div className="space-y-5">
-                            {[1,1,1,1].map((item)=><ProductReviewCard />)}    
+                            {[1,1,1].map((item, index)=><ProductReviewCard key={index}/>)}    
 
                         </div>
 
@@ -319,8 +307,8 @@ export default function ProductDetails() {
                     <Grid item xs={5}>
                         <h1 className="text-xl font-semibold pb-1">Product Ratings</h1>
                         <div className="flex items-center space-x-3">
-                            <Rating value={4.6} precision={.5} readOnly />
-                            <p className="opacity-60">54890 Ratings</p>
+                        <Rating value={averageRating} name='half-rating' readOnly precision={resultFloat} />
+                            <p className="opacity-60">{countRating} Ratings</p>
                         </div>
                         <Box className="mt-5">
                             <Grid container alignItems="center">
@@ -395,7 +383,7 @@ export default function ProductDetails() {
             <h1 className="py-5 text-xl font-bold">Similar products</h1>
 
             <div className="flex flex-wrap space-y-5">
-                {mens_kurta.map((item)=><HomeSectionCard product={item} />)}
+                {mens_kurta.map((item, index)=><HomeSectionCard product={item} key={index} />)}
 
             </div>
 

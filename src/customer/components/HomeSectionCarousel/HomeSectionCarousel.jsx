@@ -52,7 +52,7 @@ const HomeSectionCarousel = ({data, sectionName}) => {
 
   const items = data
     .slice(0, 10)
-    .map((item) => <HomeSectionCard product={item} />);
+    .map((item, index) => <HomeSectionCard product={item} key={index} />);
 
   return (
     <div className="border">

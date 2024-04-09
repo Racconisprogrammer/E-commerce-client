@@ -1,3 +1,4 @@
+import { act } from "react-dom/test-utils";
 import {
   ADD_ITEM_TO_CART_FAILURE,
   ADD_ITEM_TO_CART_REQUEST,
@@ -21,13 +22,15 @@ const initialState = {
 };
 
 export const cartReducer = (state = initialState, action) => {
+
+  console.log("Reducer ", action.type)
   switch (action.type) {
     case ADD_ITEM_TO_CART_REQUEST:
       return { ...state, loading: true, error: null };
     case ADD_ITEM_TO_CART_SUCCESS:
       return {
         ...state,
-        cartItems: [...state.cartItems, action.payload.cartItems],
+        cartItems: [...state.cartItems, action.payload],
         loading: false,
       };
     case ADD_ITEM_TO_CART_FAILURE:
@@ -52,19 +55,20 @@ export const cartReducer = (state = initialState, action) => {
     case GET_CART_FAILURE:
       return {
         ...state,
-        loading: true,
-        error: null,
+        loading: false,
+        error: action.payload,
       };
     case REMOVE_CART_ITEM_REQUEST:
     case UPDATE_CART_ITEM_REQUEST:
       return {
         ...state,
         loading: true,
+        error:null,
       };
     case REMOVE_CART_ITEM_SUCCESS:
       return {
         ...state,
-        deleteCartItem: action.payload,
+        deleteCartItem: state.cartItems.filter((item) => item.id !== action.payload),
         loading: false,
       };
 
