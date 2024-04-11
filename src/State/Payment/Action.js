@@ -6,12 +6,13 @@ export const createPayment = (orderId) => async (dispatch) => {
 
   try {
     const { data } = await api.post(`/api/payments/${orderId}`, {});
-    
+    console.log("Action ", data)
+    console.log("Action = ", data.payment_link_url)
     if (data.payment_link_url) {
       window.location.href = data.payment_link_url;
     }
 
-    // dispatch({ type: CREATE_PAYMENT_SUCCESS, payload: data });
+    dispatch({ type: CREATE_PAYMENT_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ 
       type: CREATE_PAYMENT_FAILURE, 

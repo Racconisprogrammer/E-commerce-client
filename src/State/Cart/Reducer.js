@@ -68,7 +68,7 @@ export const cartReducer = (state = initialState, action) => {
     case REMOVE_CART_ITEM_SUCCESS:
       return {
         ...state,
-        deleteCartItem: state.cartItems.filter((item) => item.id !== action.payload),
+        deleteCartItem: action.payload,
         loading: false,
       };
 

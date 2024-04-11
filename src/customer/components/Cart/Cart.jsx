@@ -17,17 +17,19 @@ const Cart = () => {
 
     useEffect(()=>{
         dispatch(getCart())
-    },[cart.updateCartItem, cart.removeCartItems])
+    },[cart.updateCartItem, cart.deleteCartItem])
 
   return (
     <div>
 
         <div className='lg:grid grid-cols-3 lg:px-16 relative'>
         <div className='col-span-2'>
-            {[...cart.cart?.cartItems].sort((a, b) => a.id - b.id).map((item) => (
+            {/*{cart.cart?.cartItems ? [...cart.cart.cartItems].sort((a, b) => a.id - b.id).map((item) => (*/}
+            {/*    <CartItem key={item.id} item={item} />*/}
+            {/*)) : null}*/}
+            {cart.cart?.cartItems?.sort((a, b) => a.id - b.id).map((item) => (
                 <CartItem key={item.id} item={item} />
             ))}
-            {/*{cart.cart?.cartItems?.map((item, index)=><CartItem key={index} item={item}/>)}*/}
         </div>
         <div className='px-5 sticky top-0 h-[100vh] mt-5 lg:mt-0'>
             <div className='border'>

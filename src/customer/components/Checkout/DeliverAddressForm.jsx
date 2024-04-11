@@ -19,12 +19,11 @@ const DeliverAddressForm = () => {
             streetAddress: data.get('address'),
             city: data.get('city'),
             state: data.get('state'),
-            zip: data.get('zip'),
-            phoneNumber: data.get('phoneNumber'),
+            zipCode: data.get('zipCode'),
+            mobile: data.get('mobile'),
         }
         const orderData = {address, navigate}
         dispatch(createOrder(orderData))
-        console.log("Address", address);
     }
 
   return (
@@ -115,8 +114,8 @@ const DeliverAddressForm = () => {
 
                             <TextField 
                             required
-                            id="zip"
-                            name="zip"
+                            id="zipCode"
+                            name="zipCode"
                             label="Zip / Postal code"
                             fullWidth
                             autoComplete="shipping postal-code"
@@ -127,8 +126,8 @@ const DeliverAddressForm = () => {
 
                             <TextField 
                             required
-                            id="phoneNumber"
-                            name="phoneNumber"
+                            id="mobile"
+                            name="mobile"
                             label="Phone Number"
                             fullWidth
                             autoComplete="given-name"
