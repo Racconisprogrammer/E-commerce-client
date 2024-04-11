@@ -1,4 +1,4 @@
-import { CREATE_ORDER_FAILURE, CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, GET_ORDER_BY_ID_FAILURE, GET_ORDER_BY_ID_REQUEST, GET_ORDER_BY_ID_SUCCESS, GET_ORDER_HISTORY_FAILURE, GET_ORDER_HISTORY_REQUEST, GET_ORDER_HISTORY_SUCCESS } from "./ActionType"
+import { CREATE_PAYMENT_REQUEST, CREATE_PAYMENT_SUCCESS, CREATE_PAYMENT_FAILURE, UPDATE_PAYMENT_REQUEST, UPDATE_PAYMENT_SUCCESS, UPDATE_PAYMENT_FAILURE } from "./ActionType"
 
 const initialState = {
     orders:[],
@@ -8,16 +8,18 @@ const initialState = {
 }
 
 
-export const orderReducer = (state=initialState, action) => {
+export const paymentReducer = (state=initialState, action) => {
 
+
+    console.log("Reducer payment ", action.type)
     switch(action.type){
-        case CREATE_ORDER_REQUEST:
+        case CREATE_PAYMENT_REQUEST:
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-        case CREATE_ORDER_SUCCESS:
+        case CREATE_PAYMENT_SUCCESS:
             return {
                 ...state,
                 loading: false, 
@@ -25,47 +27,13 @@ export const orderReducer = (state=initialState, action) => {
                 order: action.payload,
                 error: null,
             };
-        case CREATE_ORDER_FAILURE:
+        case CREATE_PAYMENT_FAILURE:
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
             };
-        case GET_ORDER_BY_ID_REQUEST:
-            return {
-                ...state,
-                loading: true,
-                error: null,
-            };
-        case GET_ORDER_BY_ID_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                error: action.payload, 
-            };
-        case GET_ORDER_BY_ID_FAILURE:
-            return {
-                ...state,
-                loading: false,
-                error: action.payload,
-            };
-        case GET_ORDER_HISTORY_REQUEST:
-            return {
-                loading:true,
-                orders:[],
-            }
-        case GET_ORDER_HISTORY_SUCCESS:
-            return {
-                ...state, 
-                loading:true, 
-            }
-    
-        case GET_ORDER_HISTORY_FAILURE:
-            return {
-                ...state, 
-                error:action.payload,
-                loading:false,
-                };
+
         default:
             return state;
 

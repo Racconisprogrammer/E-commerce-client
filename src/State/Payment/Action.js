@@ -31,10 +31,10 @@ export const updatePayment = (reqData) => async (dispatch) => {
       window.location.href = data.payment_link_url;
     }
 
-    // dispatch({ type: CREATE_PAYMENT_SUCCESS, payload: data });
+    dispatch({ type: UPDATE_PAYMENT_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ 
-      type: CREATE_PAYMENT_FAILURE, 
+      type: UPDATE_PAYMENT_FAILURE,
       payload: error.message,
     });
   }
