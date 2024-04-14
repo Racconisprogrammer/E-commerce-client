@@ -9,25 +9,32 @@ import AddressCard from '../AddressCard/AddressCard';
 
 const PaymentSuccess = () => {
     const [paymentId, setPaymentId] = useState();
-    const [refrenceId, setRefrenceId] = useState();
-    const [paymentStatus, setPaymentStatus] = useState();
+    const [razorpayPaymentId, setRazorpayPaymentId] = useState();
+    const [razorpayPaymentLinkReferenceId, setRazorpayPaymentLinkReferenceId] = useState();
+    const [razorpayPaymentLinkStatus, setRazorpayPaymentLinkStatus] = useState();
+    const [razorpayPaymentLinkId, setRazorpayPaymentLinkId] = useState();
     const {orderId} = useParams();
     const dispatch = useDispatch();
     const {order} = useSelector(store=>store);
 
     useEffect(()=> {
         const urlParam = new URLSearchParams(window.location.search);
-
         setPaymentId(urlParam.get("razorpay_payment_id"))
-        setPaymentStatus(urlParam.get("razorpay_payment_link_status"))
+        setRazorpayPaymentId(urlParam.get("razorpay_payment_id"))
+        setRazorpayPaymentLinkReferenceId(urlParam.get("razorpay_payment_link_reference_id"))
+        setRazorpayPaymentLinkStatus(urlParam.get("razorpay_payment_link_status"))
+        setRazorpayPaymentLinkId(urlParam.get("razorpay_payment_link_id"))
+
     }, [])
 
+    console.log("orders ", order)
+    console.log("Id ", orderId)
 
     useEffect(()=> {
         if (paymentId) {
-        const data = {orderId, paymentId};
-        dispatch(getOrderById(orderId));
-        dispatch(updatePayment(data))
+            const data = {paymentId, razorpayPaymentId, razorpayPaymentLinkReferenceId, razorpayPaymentLinkStatus, razorpayPaymentLinkId};
+            dispatch(getOrderById(orderId));
+            dispatch(updatePayment(orderId,data))
     }
 
     }, [orderId, paymentId])
@@ -44,7 +51,7 @@ const PaymentSuccess = () => {
                 Congrulation Your Order Get Placed
             </Alert>
         </div>
-        <OrderTracker activeStep={1}/>
+        <OrderTracker key={1} activeStep={1}/>
 
         <Grid container className='space-y-5 py-5 pt-20'>
 

@@ -1,4 +1,4 @@
-import { api } from "../../config/apiConfig";
+import {api, API_BASE_URL} from "../../config/apiConfig";
 import { CREATE_PAYMENT_REQUEST, CREATE_PAYMENT_SUCCESS, CREATE_PAYMENT_FAILURE, UPDATE_PAYMENT_REQUEST, UPDATE_PAYMENT_SUCCESS, UPDATE_PAYMENT_FAILURE} from "./ActionType";
 
 export const createPayment = (orderId) => async (dispatch) => {
@@ -6,8 +6,6 @@ export const createPayment = (orderId) => async (dispatch) => {
 
   try {
     const { data } = await api.post(`/api/payments/${orderId}`, {});
-    console.log("Action ", data)
-    console.log("Action = ", data.payment_link_url)
     if (data.payment_link_url) {
       window.location.href = data.payment_link_url;
     }
@@ -21,14 +19,14 @@ export const createPayment = (orderId) => async (dispatch) => {
   }
 };
 
-export const updatePayment = (reqData) => async (dispatch) => {
+export const updatePayment = (orderId,reqData) => async (dispatch) => {
   dispatch({ type: UPDATE_PAYMENT_REQUEST });
 
   try {
-    const { data } = await api.get(`/api/payments?payment_id=${reqData.paymentId}&order_id=${reqData.orderId}`);
+    const { data } = await api.put(`${API_BASE_URL}/api/payments/update/${orderId}`, reqData);
     
-    if (data.payment_link_url) {
-      window.location.href = data.payment_link_url;
+    if (data.razorpayPaymentLinkId) {
+      window.location.href = data.razorpayPaymentLinkId;
     }
 
     dispatch({ type: UPDATE_PAYMENT_SUCCESS, payload: data });
