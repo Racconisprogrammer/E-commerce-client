@@ -54,7 +54,7 @@ const OrdersTable = () => {
                                     <TableCell align="right">
                                         <AvatarGroup max={3} sx={{justifyContent:"start"}}>
                                             {item.orderItems.map((orderItem)=>
-                                                <Avatar src={orderItem.product.imageUrl}></Avatar>)}
+                                                <Avatar src="https://rukminim1.flixcart.com/image/612/612/k4d27ww0/shirt/q/w/t/l-el024-el-senor-original-imafnadnjp5pq6tg.jpeg?q=70"></Avatar>)}
                                         </AvatarGroup>
 
                                     </TableCell>

@@ -1,15 +1,35 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {API_BASE_URL} from "../../../config/apiConfig";
 
 const HomeSectionCard = ({product}) => {
+
+  const [imageSrcs, setImageSrcs] = useState({});
+
+
+  const handleImageLoad = (id) => {
+    fetch(`${API_BASE_URL}/images/${id}`)
+        .then(response => {
+          const fileName = response.headers.get('fileName');
+          return response.blob().then(blob => {
+            const src = URL.createObjectURL(blob);
+            setImageSrcs(prevState => ({ ...prevState, [id]: { src, fileName } }));
+          });
+        });
+  };
+
+  useEffect(() => {
+    product?.images?.forEach(item => handleImageLoad(item.id));
+  }, [product]);
+
   return (
     <div
       className="
-    cursor-pointer 
-    flex 
-    flex-col 
+    cursor-pointer
+    flex
+    flex-col
     items-center
-    bg-white 
-    rounded-lg 
+    bg-white
+    rounded-lg
     shadow-lg
     overflow-hidden
     w-[15rem]
@@ -18,11 +38,13 @@ const HomeSectionCard = ({product}) => {
     "
     >
       <div className="h-[13rem] w-[10rem]">
-        <img
-          className="object-cover object-top w-full h-full"
-          src={product.imageUrl}
-          alt=""
-        />
+        {product?.images?.[0] && (
+            <img
+                src={imageSrcs[product?.images[0]?.id]?.src}
+                alt={imageSrcs[product?.images[0]?.id]?.fileName}
+                className="object-cover object-top w-full h-full"
+            />
+        )}
       </div>
 
       <div className="p-4">

@@ -1,14 +1,16 @@
 import { Avatar, Box, Grid, Rating } from '@mui/material'
 import React from 'react'
 
-const ProductReviewCard = () => {
+const ProductReviewCard = ({item}) => {
   return (
     <div>
-        <Grid container spacing={2} gap={3}>
+
+        {item?.reviews?.map((item)=>(
+        <Grid container spacing={2} gap={3} className="mb-10">
 
             <Grid item xs={1}>
                 <Box>
-                    <Avatar className='text-white' sx={{width:56, height:56, bgcolor:"#9155fd"}}>R</Avatar>
+                    <Avatar className='text-white' sx={{width:56, height:56, bgcolor:"#9155fd"}}>{item?.user?.firstName}</Avatar>
                 </Box>
 
             </Grid>
@@ -16,21 +18,18 @@ const ProductReviewCard = () => {
         <Grid item xs={9}>
             <div className='space-y-2'>
                 <div>
-                    <p className='font-semibold text-lg'>Raam</p>
-                    <p className='opacity-70'>April 5, 2024</p>
+                    <p className='font-semibold text-lg'>{item?.user?.firstName} {item?.user?.lastName}</p>
+                    <p className='opacity-70'>{item?.createAt}</p>
                 </div>
 
             </div>
 
-            <Rating value={4.5} name='half-rating' readOnly precision={.5} />
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-               Cum eius tempora, vitae quia mollitia voluptatem quasi at.
-               Eos consequuntur blanditiis perferendis neque praesentium, 
-               repellat illum repellendus, laborum qui sint quibusdam.</p>
+            {/*<Rating value={4.5} name='half-rating' readOnly precision={.5} />*/}
+            <p>{item?.review}</p>
 
         </Grid>
 
-        </Grid>
+        </Grid>))}
     </div>
   )
 }

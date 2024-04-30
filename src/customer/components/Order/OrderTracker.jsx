@@ -5,14 +5,22 @@ const steps = [
     "Placed", 
     "Order confirmed", 
     "Shipped", 
-    "Out for delivery", 
-    "Delivered", 
+    "Delivered",
+]
+
+const stepStatus = [
+    "PLACED",
+    "CONFIRMED",
+    "SHIPPED",
+    "DELIVERED",
+    "CANCELLED"
 ]
 
 const OrderTracker = ({activeStep}) => {
+    const numStep = stepStatus.indexOf(activeStep)
   return (
     <div className='w-full'>
-        <Stepper activeStep={activeStep} alternativeLabel>
+        <Stepper activeStep={numStep} alternativeLabel>
             {steps.map((label)=><Step>
                 <StepLabel sx={{color:"#9155fd", fontSize:"44px"}}>{label}</StepLabel>
             </Step>)}

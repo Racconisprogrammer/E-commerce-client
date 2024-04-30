@@ -7,39 +7,62 @@ import {
     CONFIRMED_ORDER_SUCCESS, DELETE_ORDER_FAILURE, DELETE_ORDER_REQUEST, DELETE_ORDER_SUCCESS,
     DELIVERED_ORDER_FAILURE,
     DELIVERED_ORDER_REQUEST,
-    DELIVERED_ORDER_SUCCESS,
+    DELIVERED_ORDER_SUCCESS, GET_HISTORY_ORDERS_FAILURE, GET_HISTORY_ORDERS_REQUEST, GET_HISTORY_ORDERS_SUCCESS,
     GET_ORDERS_FAILURE,
     GET_ORDERS_REQUEST,
     GET_ORDERS_SUCCESS,
     PLACED_ORDER_FAILURE,
     PLACED_ORDER_REQUEST,
-    PLACED_ORDER_SUCCESS, SHIP_ORDER_FAILURE, SHIP_ORDER_REQUEST, SHIP_ORDER_SUCCESS
+    PLACED_ORDER_SUCCESS, SHIP_ORDER_FAILURE, SHIP_ORDER_REQUEST, SHIP_ORDER_SUCCESS,
+    FIND_ALL_PRODUCTS_FAILURE,FIND_ALL_PRODUCTS_SUCCESS,FIND_ALL_PRODUCTS_REQUEST
 } from "./ActionType";
 
 
 const initialState = {
     loading: false,
     orders: [],
+    producer:[],
+    product:null,
     error:"",
 };
 
 const adminOrderReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_ORDERS_REQUEST:
+        case GET_HISTORY_ORDERS_REQUEST:
+            return {
+                ...state,
+                loading: true,
+            }
+        case FIND_ALL_PRODUCTS_REQUEST:
             return {
                 ...state,
                 loading: true,
             }
         case GET_ORDERS_SUCCESS:
+        case GET_HISTORY_ORDERS_SUCCESS:
             return {
                 loading: false,
                 orders: action.payload,
                 error: ""
             }
+        case FIND_ALL_PRODUCTS_SUCCESS:
+            return {
+                loading: false,
+                producer: action.payload,
+                error: ""
+            }
         case GET_ORDERS_FAILURE:
+        case GET_HISTORY_ORDERS_FAILURE:
             return {
                 loading: false,
                 orders: [],
+                error: action.payload
+            }
+        case FIND_ALL_PRODUCTS_FAILURE:
+            return {
+                loading: false,
+                producer: [],
                 error: action.payload
             }
         case CONFIRMED_ORDER_REQUEST:

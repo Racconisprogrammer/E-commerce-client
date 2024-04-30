@@ -5,7 +5,7 @@ import {
     FIND_PRODUCT_BY_ID_FAILURE,
     FIND_PRODUCT_BY_ID_REQUEST,
     FIND_PRODUCT_BY_ID_SUCCESS,
-    DELETE_PRODUCT_SUCCESS
+    DELETE_PRODUCT_SUCCESS, FIND_ALL_PRODUCTS_REQUEST, FIND_ALL_PRODUCTS_SUCCESS, FIND_ALL_PRODUCTS_FAILURE
 } from "./ActionType"
 
 const initialState = {
@@ -19,9 +19,11 @@ export const customerProductReducer=(state=initialState, action) => {
     
     switch(action.type) {
         case FIND_PRODUCTS_REQUEST:
+        case FIND_ALL_PRODUCTS_REQUEST:
         case FIND_PRODUCT_BY_ID_REQUEST:
             return {...state, loading:true, error:null}
         case FIND_PRODUCTS_SUCCESS:
+        case FIND_ALL_PRODUCTS_SUCCESS:
             return {...state, loading:false, error:null, products:action.payload}
         case FIND_PRODUCT_BY_ID_SUCCESS:
             return {...state, loading:false, error:null, products:action.payload}
@@ -31,6 +33,7 @@ export const customerProductReducer=(state=initialState, action) => {
             }
         case FIND_PRODUCTS_FAILURE:
         case FIND_PRODUCT_BY_ID_FAILURE:
+        case FIND_ALL_PRODUCTS_FAILURE:
             return {...state, loading:false, error:action.payload}
 
         default:

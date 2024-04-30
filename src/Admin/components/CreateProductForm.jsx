@@ -1,38 +1,49 @@
-import React, {Fragment, useState} from "react";
-import {useDispatch} from "react-redux";
+import React, {Fragment, useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {createProduct} from "../../State/Product/Action";
 import {Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
+import {getCategory} from "../../State/Category/Action";
+import { CKEditor } from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
-const initialSizes = [
-    {name: "S", quantity: 0},
-    {name: "M", quantity: 0},
-    {name: "L", quantity: 0},
-]
 
 const CreateProductForm = () => {
 
+    const {category} = useSelector(store=>store)
+
+    useEffect(() => {
+        dispatch(getCategory())
+    }, []);
+
     const [productData, setProductData] = useState({
-        imageUrl:"",
+        file1:[],
+        file2:[],
+        file3:[],
+        file4:[],
+        file5:[],
         brand:"",
         title:"",
         color:"",
         discountedPrice:"",
+        highlights:"",
         price:"",
-        discountPercent:"",
-        size:initialSizes,
+        discountedPercent:"",
         quantity:"",
-        topLavelCategory:"",
-        secondLavelCategory:"",
-        thirdLavelCategory:"",
+        topLevelCategory:"",
+        secondLevelCategory:"",
+        thirdLevelCategory:"",
         description:"",
+        details:"",
     });
 
     const dispatch = useDispatch()
     const jwt = localStorage.getItem("jwt")
 
 
+
     const handleChange = (e) => {
+        console.log("change ", e)
         const {name, value} = e.target;
         setProductData((prevState) => ({
             ...prevState,
@@ -40,29 +51,21 @@ const CreateProductForm = () => {
         }));
     };
 
-    const handleSizeChange = (e, index) => {
-        let {name, value} = e.target;
-        name==="size_quantity"?name="quantity":name=e.target.name;
-
-        const sizes = [...productData.size];
-        sizes[index][name] = value;
-        setProductData((prevState)=>({
-            ...prevState,
-            size: sizes,
-        }))
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("Prooooo ", productData)
         dispatch(createProduct(productData))
 
     }
 
     return (
-        <div className=' p-10'>
+        <div className='p-10'>
+
+
             <Typography
                 variant='h3'
-                sx={{textAlign:"center"}}
+                sx={{textAlign: "center"}}
                 className="py-10 text-center"
             >
                 Add new product
@@ -73,13 +76,74 @@ const CreateProductForm = () => {
             >
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Image URL"
-                            name="imageUrl"
-                            value={productData.imageUrl}
-                            onChange={handleChange}
-                            />
+                        <input
+                            accept="image/*"
+                            id="file1"
+                            multiple
+                            type="file"
+                            onChange={(e) => handleChange({target: {name: "file1", value: e.target.files[0]}})}
+                        />
+                        <label htmlFor="file1">
+                            <Button component="span">
+                                Upload File 1
+                            </Button>
+                        </label>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            accept="image/*"
+                            id="file2"
+                            multiple
+                            type="file"
+                            onChange={(e) => handleChange({target: {name: "file2", value: e.target.files[0]}})}
+                        />
+                        <label htmlFor="file2">
+                            <Button component="span">
+                                Upload File 2
+                            </Button>
+                        </label>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            accept="image/*"
+                            id="file3"
+                            multiple
+                            type="file"
+                            onChange={(e) => handleChange({target: {name: "file3", value: e.target.files[0]}})}
+                        />
+                        <label htmlFor="file3">
+                            <Button component="span">
+                                Upload File 3
+                            </Button>
+                        </label>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            accept="image/*"
+                            id="file4"
+                            multiple
+                            type="file"
+                            onChange={(e) => handleChange({target: {name: "file4", value: e.target.files[0]}})}
+                        />
+                        <label htmlFor="file4">
+                            <Button component="span">
+                                Upload File 4
+                            </Button>
+                        </label>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            accept="image/*"
+                            id="file5"
+                            multiple
+                            type="file"
+                            onChange={(e) => handleChange({target: {name: "file5", value: e.target.files[0]}})}
+                        />
+                        <label htmlFor="file5">
+                            <Button component="span">
+                                Upload File 3
+                            </Button>
+                        </label>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -88,7 +152,7 @@ const CreateProductForm = () => {
                             name="brand"
                             value={productData.brand}
                             onChange={handleChange}
-                            />
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -97,7 +161,7 @@ const CreateProductForm = () => {
                             name="title"
                             value={productData.title}
                             onChange={handleChange}
-                            />
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -106,7 +170,7 @@ const CreateProductForm = () => {
                             name="color"
                             value={productData.color}
                             onChange={handleChange}
-                            />
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -116,7 +180,7 @@ const CreateProductForm = () => {
                             value={productData.quantity}
                             onChange={handleChange}
                             type="number"
-                            />
+                        />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
@@ -126,7 +190,7 @@ const CreateProductForm = () => {
                             value={productData.price}
                             onChange={handleChange}
                             type="number"
-                            />
+                        />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
@@ -136,39 +200,29 @@ const CreateProductForm = () => {
                             value={productData.discountedPrice}
                             onChange={handleChange}
                             type="number"
-                            />
+                        />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             fullWidth
                             label="Discount Percentage"
-                            name="discountPercent"
-                            value={productData.discountPercent}
+                            name="discountedPercent"
+                            value={productData.discountedPercent}
                             onChange={handleChange}
                             type="number"
-                            />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="Discount Percentage"
-                            name="discountPercent"
-                            value={productData.discountPercent}
-                            onChange={handleChange}
-                            type="number"
-                            />
+                        />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <FormControl fullWidth>
                             <InputLabel>Top Level Category</InputLabel>
                             <Select
-                                name="topLavelCategory"
-                                value={productData.topLavelCategory}
+                                name="topLevelCategory"
+                                value={productData.topLevelCategory}
                                 onChange={handleChange}
                                 label="Top Level Category">
-                                <MenuItem value="men">Men</MenuItem>
-                                <MenuItem value="women">Women</MenuItem>
-                                <MenuItem value="kids">Kids</MenuItem>
+                                {category.category?.map((item) =>
+                                    <MenuItem value={item.name}>{item.name}</MenuItem>
+                                )}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -176,13 +230,15 @@ const CreateProductForm = () => {
                         <FormControl fullWidth>
                             <InputLabel>Second Level Category</InputLabel>
                             <Select
-                                name="secondLavelCategory"
-                                value={productData.secondLavelCategory}
+                                name="secondLevelCategory"
+                                value={productData.secondLevelCategory}
                                 onChange={handleChange}
                                 label="Second Level Category">
-                                <MenuItem value="clothing">Clothing</MenuItem>
-                                <MenuItem value="accessories">Accessories</MenuItem>
-                                <MenuItem value="brands">Brands</MenuItem>
+                                {category.category
+                                    ?.find((item) => item.name === productData.topLevelCategory)
+                                    ?.subcategories?.map((item) => (
+                                        <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
+                                    ))}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -190,19 +246,20 @@ const CreateProductForm = () => {
                         <FormControl fullWidth>
                             <InputLabel>Third Level Category</InputLabel>
                             <Select
-                                name="thirdLavelCategory"
-                                value={productData.thirdLavelCategory}
+                                name="thirdLevelCategory"
+                                value={productData.thirdLevelCategory}
                                 onChange={handleChange}
                                 label="Third Level Category">
-                                <MenuItem value="top">Tops</MenuItem>
-                                <MenuItem value="women_dress">Dresses</MenuItem>
-                                <MenuItem value="t-shirts">T-shirts</MenuItem>
-                                <MenuItem value="lengha-choli">Lengha choli</MenuItem>
-                                <MenuItem value="mens_kurta">Mens kurta</MenuItem>
+                                {category.category
+                                    ?.find((item) => item.name === productData.topLevelCategory)
+                                    ?.subcategories?.find((item) => item.name === productData.secondLevelCategory)
+                                    ?.subcategories?.map((item) => (
+                                        <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
+                                    ))}
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={12}>
                         <TextField
                             fullWidth
                             id="outlined-multiline-static"
@@ -214,32 +271,64 @@ const CreateProductForm = () => {
                             onChange={handleChange}
                         />
                     </Grid>
-                    {productData.size.map((size,index) => (
-                        <Grid container item spacinng={3}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Size name"
-                                    name="name"
-                                    value={size.name}
-                                    onChange={(event)=>handleSizeChange(event, index)}
-                                    required
-                                    fullWidth/>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Quantity"
-                                    name="size_quantity"
-                                    type="number"
-                                    onChange={(event)=>handleSizeChange(event, index)}
-                                    required
-                                    fullWidth/>
-                            </Grid>
-                        </Grid>
-                    ))}
+                    <Grid item xs={12} sm={12}>
+                        <label htmlFor="details">Details</label>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            name="details"
+                            id="details"
+                            data={`<div>${productData.details}</div>`}
+                            onReady={editor => {
+                                console.log('Editor is ready to use!', editor);
+                            }}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                handleChange({
+                                    target: {
+                                        name: "details",
+                                        value: data,
+                                    },
+                                });
+                            }}
+                            onBlur={(event, editor) => {
+                                console.log('Blur.', editor);
+                            }}
+                            onFocus={(event, editor) => {
+                                console.log('Focus.', editor);
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={6} sm={6}>
+                        <label htmlFor="highlights">Highlights</label>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            name="highlights"
+                            id="highlights"
+                            data={`<div>${productData.highlights}</div>`}
+                            onReady={editor => {
+                                console.log('Editor is ready to use!', editor);
+                            }}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                handleChange({
+                                    target: {
+                                        name: "highlights",
+                                        value: data,
+                                    },
+                                });
+                            }}
+                            onBlur={(event, editor) => {
+                                console.log('Blur.', editor);
+                            }}
+                            onFocus={(event, editor) => {
+                                console.log('Focus.', editor);
+                            }}
+                        />
+                    </Grid>
                     <Grid item xs={12}>
                         <Button
                             variant="contained"
-                            sx={{p:1.8}}
+                            sx={{p: 1.8}}
                             className="py-20"
                             size="large"
                             type="submit">
@@ -248,6 +337,7 @@ const CreateProductForm = () => {
                         </Button>
                     </Grid>
                 </Grid>
+
             </form>
         </div>
     );

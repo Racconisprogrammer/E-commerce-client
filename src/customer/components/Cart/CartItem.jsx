@@ -1,12 +1,33 @@
 import { Button, IconButton } from '@mui/material'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {useDispatch} from 'react-redux';
 import {removeCartItems, updateCartItems} from '../../../State/Cart/Action';
+import {API_BASE_URL} from "../../../config/apiConfig";
 
 
 const CartItem = ({item}) => {
+    const [imageSrcs, setImageSrcs] = useState({});
+
+
+    const handleImageLoad = (id) => {
+        console.log("itemm ", id)
+        fetch(`${API_BASE_URL}/images/${id}`)
+            .then(response => {
+                const name = response.headers.get('name');
+                return response.blob().then(blob => {
+                    const src = URL.createObjectURL(blob);
+                    setImageSrcs(prevState => ({ ...prevState, [id]: { src, name } }));
+                });
+            });
+    };
+
+
+    useEffect(() => {
+        item?.product?.images?.forEach(items => handleImageLoad(items.id));
+    }, [item]);
+
 
     const dispatch = useDispatch();
 
@@ -19,6 +40,7 @@ const CartItem = ({item}) => {
         dispatch(removeCartItems(item?.id))
     }
 
+
     return (
     <div className='p-5 shadow-lg border rounded-md'>
 
@@ -26,8 +48,13 @@ const CartItem = ({item}) => {
 
             <div className='w-[5rem] h-[5rem] lg:w-[9rem] lg:h-[9rem]'>
 
-                <img className='w-full h-full object-cover object-top' 
-                src={item?.product?.imageUrl} alt="" />
+                  {item?.product?.images?.[0] && (
+                    <img
+                        src={imageSrcs[item?.product?.images[0]?.id]?.src}
+                        alt={imageSrcs[item?.product?.images[0]?.id]?.name}
+                        className="w-full h-full object-cover object-top"
+                    />
+                )}
 
             </div>
 

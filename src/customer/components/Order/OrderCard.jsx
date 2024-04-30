@@ -4,11 +4,12 @@ import AdjustIcon from '@mui/icons-material/Adjust';
 import { useNavigate } from 'react-router-dom';
 
 
-const OrderCard = () => {
+const OrderCard = ({item, orderId}) => {
     const navigate = useNavigate();
 
+
   return (
-    <div onClick={()=>navigate(`/account/order/${5}`)} className='p5 shadow-md shadow-black hover:shadow-2xl border'>
+    <div onClick={()=>navigate(`/account/order/${orderId}`)} className='p5 shadow-md shadow-black hover:shadow-2xl border'>
 
         <Grid container spacing={2} sx={{justifyContent:"space-between"}}>
 
@@ -16,12 +17,12 @@ const OrderCard = () => {
 
                 <div className='flex cursor-pointer'>
                     <img className='w-[5rem] h-[5rem] object-cover object-top'
-                     src="https://rukminim1.flixcart.com/image/612/612/xif0q/kurta/y/c/x/xl-kast107hp-majestic-man-original-imafw49u5uty4agx-bb.jpeg?q=70" alt="" />
+                     src="https://rukminim1.flixcart.com/image/612/612/k4d27ww0/shirt/q/w/t/l-el024-el-senor-original-imafnadnjp5pq6tg.jpeg?q=70" alt="" />
                     <div className='ml-5 space-y-2'>
 
-                        <p className=''>Men slim mid kit</p>
-                        <p className='opacity-50 text-xs font-semibold'>Size: M</p>
-                        <p className='opacity-50 text-xs font-semibold'>Color: black</p>
+                        <p className=''>{item?.product?.title}</p>
+                        <p className='opacity-50 text-xs font-semibold'>Size: {item?.size}</p>
+                        <p className='opacity-50 text-xs font-semibold'>Color: {item?.product?.color}</p>
 
                     </div>
                 </div>
@@ -30,23 +31,23 @@ const OrderCard = () => {
 
             <Grid item xs={2}>
 
-                <p>$1099</p>
+                <p>${item?.price}</p>
 
             </Grid>
 
 
             <Grid item xs={4}>
-                {true && <div>
+                {item?.deliveryDate !== null && <div>
 
                 <p>
                     <AdjustIcon sx={{width:"15px", height:"15px"}} className='text-green-600 mr-2
                     text-sm' />
-                    <span>Delivered on March 03</span>
+                    <span>Delivered on {item?.deliveryDate}</span>
                 </p>
                 <p className='text-xs'>Your Item Has Been Delivered</p>
-                </div>} 
-                {false &&                <p>
-                    <span>Delivered on March 03</span>
+                </div>}
+                {item?.deliveryDate === null && <p>
+                    <span>Delivered on 10-15 days</span>
                 </p>}
 
             </Grid>

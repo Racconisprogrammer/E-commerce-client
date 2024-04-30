@@ -10,6 +10,8 @@ const HomeSectionCarousel = ({data, sectionName}) => {
     1024: { items: 6.5 },
   };
 
+
+
   const renderNextButton = ({ isDisabled }) => {
     return (
       <Button
@@ -50,9 +52,9 @@ const HomeSectionCarousel = ({data, sectionName}) => {
   </Button>
   };
 
-  const items = data
-    .slice(0, 10)
-    .map((item, index) => <HomeSectionCard product={item} key={index} />);
+    const items = data.slice(0, 10)
+            .map((item, index) => <HomeSectionCard product={item} key={index} />);
+
 
   return (
     <div className="border">

@@ -53,20 +53,23 @@ export const orderReducer = (state=initialState, action) => {
             };
         case GET_ORDER_HISTORY_REQUEST:
             return {
+                ...state,
                 loading:true,
-                orders:[],
+                error: null,
             }
         case GET_ORDER_HISTORY_SUCCESS:
             return {
-                ...state, 
-                loading:true, 
+                ...state,
+                loading: false,
+                error: null,
+                order: action.payload,
             }
     
         case GET_ORDER_HISTORY_FAILURE:
             return {
-                ...state, 
-                error:action.payload,
+                ...state,
                 loading:false,
+                error:action.payload,
                 };
         default:
             return state;

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Avatar,
     Button,
@@ -13,10 +13,24 @@ import {
 } from "@mui/material";
 import {deleteProduct, findProducts} from "../../State/Product/Action";
 import {useDispatch, useSelector} from "react-redux";
+import {API_BASE_URL} from "../../config/apiConfig";
 
 
 const ProductsTable = () => {
 
+    const [imageSrcs, setImageSrcs] = useState({});
+
+
+    const handleImageLoad = (id) => {
+        fetch(`${API_BASE_URL}/images/${id}`)
+            .then(response => {
+                const fileName = response.headers.get('fileName');
+                return response.blob().then(blob => {
+                    const src = URL.createObjectURL(blob);
+                    setImageSrcs(prevState => ({ ...prevState, [id]: { src, fileName } }));
+                });
+            });
+    };
     const dispatch = useDispatch();
     const {products} = useSelector(store=>store);
 
@@ -28,7 +42,7 @@ const ProductsTable = () => {
     useEffect(()=> {
 
         const data = {
-            category: "mens_kurta",
+            category: "",
             colors: [],
             sizes: [],
             minPrice:0,
@@ -42,6 +56,11 @@ const ProductsTable = () => {
 
         dispatch(findProducts(data))
     }, [products.deletedProduct])
+
+
+    useEffect(() => {
+        products?.products?.content?.forEach(item => handleImageLoad(item.id));
+    }, [products]);
 
 
     return (
@@ -70,7 +89,9 @@ const ProductsTable = () => {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell align="right">
-                                    <Avatar src={item.imageUrl}></Avatar>
+                                    {imageSrcs[item.id] && (
+                                        <Avatar src={imageSrcs[item.id].src} alt={imageSrcs[item.id].fileName} />
+                                    )}
                                 </TableCell>
                                 <TableCell align="left" scope="row">
                                     {item.title}

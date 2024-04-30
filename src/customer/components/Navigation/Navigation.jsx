@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AuthModel from "../../auth/AuthModel";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logout } from "../../../State/Auth/Action";
+import {getCategory} from "../../../State/Category/Action";
 
 
 
@@ -32,6 +33,7 @@ export default function Navigation() {
   const dispatch = useDispatch();
   const {auth} = useSelector(store=>store)
   const {cart} = useSelector(store=>store)
+  const {category} = useSelector(store=>store)
   const location = useLocation();
 
  const handleCartClick = () => {
@@ -51,8 +53,12 @@ export default function Navigation() {
     // navigate("/")
   };
 
+    useEffect(() => {
+        dispatch(getCategory())
+    }, []);
+
   const handleCategoryClick = (category, section, item, close) => {
-    navigate(`/${category.id}/${section.id}/${item.id}`);
+    navigate(`/${category}/${section}/${item}`);
     close();
   };
 
@@ -72,7 +78,7 @@ export default function Navigation() {
   }, [auth.user])
 
 
-  const handleLogout = () => {
+        const handleLogout = () => {
     dispatch(logout())
     handleCloseUserMenu()
   }
@@ -285,23 +291,23 @@ export default function Navigation() {
                 </a>
               </div>
 
-              {/* Flyout menus */}
+               {/*Flyout menus */}
               <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch z-10">
                 <div className="flex h-full space-x-8">
-                  {navigation.categories.map((category) => (
-                    <Popover key={category.name} className="flex">
+                  {category.category?.map((item) => (
+                    <Popover key={item.name} className="flex">
                       {({ open, close }) => (
                         <>
                           <div className="relative flex">
                             <Popover.Button
                               className={classNames(
                                 open
-                                  ? "border-indigo-600 text-indigo-600"
-                                  : "border-transparent text-gray-700 hover:text-gray-800",
+                                  ? "border-indigo-300 text-indigo-300"
+                                  : "border-transparent text-gray-700 hover:text-gray-300",
                                 "relative z-10 -mb-px flex items-center border-b-2 pt-px text-sm font-medium transition-colors duration-200 ease-out"
                               )}
                             >
-                              {category.name}
+                              {item.name}
                             </Popover.Button>
                           </div>
 
@@ -315,7 +321,6 @@ export default function Navigation() {
                             leaveTo="opacity-0"
                           >
                             <Popover.Panel className="absolute inset-x-0 top-full text-sm text-gray-500">
-                              {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                               <div
                                 className="absolute inset-0 top-1/2 bg-white shadow"
                                 aria-hidden="true"
@@ -325,18 +330,23 @@ export default function Navigation() {
                                 <div className="mx-auto max-w-7xl px-8">
                                   <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
                                     <div className="col-start-2 grid grid-cols-2 gap-x-8">
-                                      {category.featured.map((item) => (
+                                      {item.subcategories?.map((sector) => (
                                         <div
-                                          key={item.name}
+                                          key={sector.name}
                                           className="group relative text-base sm:text-sm"
                                         >
                                           <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
                                             <img
-                                              src={item.imageSrc}
-                                              alt={item.imageAlt}
+                                              src={sector.imageSrc}
+                                              alt={sector.imageAlt}
                                               className="object-cover object-center"
                                             />
                                           </div>
+                                            <span
+                                            className="font-bold text-black z-10 text-2xl"
+                                            >
+                                            {item.name}
+                                            </span>
                                           <a
                                             href={item.href}
                                             className="mt-6 block font-medium text-gray-900"
@@ -345,7 +355,8 @@ export default function Navigation() {
                                               className="absolute inset-0 z-10"
                                               aria-hidden="true"
                                             />
-                                            {item.name}
+
+                                            {sector.name}
                                           </a>
                                           <p
                                             aria-hidden="true"
@@ -357,11 +368,11 @@ export default function Navigation() {
                                       ))}
                                     </div>
                                     <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10 text-sm">
-                                      {category.sections.map((section) => (
+                                      {item.subcategories?.map((section) => (
                                         <div key={section.name}>
                                           <p
                                             id={`${section.name}-heading`}
-                                            className="font-medium text-gray-900"
+                                            className="font-medium text-xl text-gray-900"
                                           >
                                             {section.name}
                                           </p>
@@ -370,19 +381,18 @@ export default function Navigation() {
                                             aria-labelledby={`${section.name}-heading`}
                                             className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                                           >
-                                            {section.items.map((item) => (
+                                            {section.subcategories?.map((items) => (
                                               <li
-                                                key={item.name}
+                                                key={items.name}
                                                 className="flex"
                                               >
                                                 <p onClick={()=>
-                                                handleCategoryClick(category, section, item, close)}
+                                                handleCategoryClick(item.name, section.name, items.name, close)}
                                                 className="cursor-pointer hover:text-gray-800"
                                                 >
-                                                  
-                                                  {item.name}
+                                                  {items.name}
                                                 </p>
-                                              
+
                                               </li>
                                             ))}
                                           </ul>
@@ -397,16 +407,6 @@ export default function Navigation() {
                         </>
                       )}
                     </Popover>
-                  ))}
-
-                  {navigation.pages.map((page) => (
-                    <a
-                      key={page.name}
-                      href={page.href}
-                      className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      {page.name}
-                    </a>
                   ))}
                 </div>
               </Popover.Group>
